@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  nginx:
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3050:80"
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: "./server"
+    volumes:
+      - ./server:/app
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        app_env: ${APP_ENV}
+    volumes:
+      - ./frontend/src:/frontend/src 
+    ports:
+      - "3000:3000"
+
+  frontend:
+
