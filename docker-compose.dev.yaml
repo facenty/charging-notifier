@@ -7,8 +7,8 @@ services:
       target: development-build-stage
       dockerfile: Dockerfile
     container_name: backend
-    ports:
-      - '8080:8080'
+    # ports:
+    #   - '8080:8080'
     environment:
       MONGO_HOST: mongo
       MONGO_PORT: 27017
@@ -24,29 +24,19 @@ services:
     depends_on:
       - mongo
 
-  # mongo:
-  #   image: mvertes/alpine-mongo
-  #   container_name: mongo
-  #   ports:
-  #     - '27017:27017'
-  #     - '28017:28017'
-  #   networks:
-  #     - server-network
-
   mongo:
     image: mongo
     container_name: mongo
     restart: always
-    ports:
-      - 27017:27017
-      - 28017:28017
+    # ports:
+    #   - 27017:27017
     volumes:
       - ./data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     networks:
-        - server-network
+      - server-network
 
   mongo-express:
     image: mongo-express
@@ -71,8 +61,8 @@ services:
       target: node-development-build-stage
       dockerfile: Dockerfile
     container_name: frontend
-    ports:
-      - '3000:3000'
+    # ports:
+    #   - '3000:3000'
     volumes:
       - ./frontend/:/app
       # - /app/node_modules
@@ -90,7 +80,8 @@ services:
       - '80:80'
     volumes:
       - ./frontend/nginx/common/default.conf:/etc/nginx/nginx.conf
-      - ./frontend/nginx/development/frontend.conf:/etc/nginx/frontend.conf
+      - ./frontend/nginx/development/frontend-server.conf:/etc/nginx/frontend-server.conf
+      - ./frontend/nginx/development/frontend-http.conf:/etc/nginx/frontend-http.conf
     restart: 'unless-stopped'
     networks:
       - server-network

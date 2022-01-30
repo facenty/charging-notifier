@@ -40,7 +40,8 @@ COPY ./nginx/common/default.conf /etc/nginx/nginx.conf
 # Development build stage
 FROM nginx-common-build-stage as nginx-development-build-stage
 
-COPY ./nginx/development/frontend.conf /etc/nginx/frontend.conf
+COPY ./nginx/development/frontend-server.conf /etc/nginx/frontend-server.conf
+COPY ./nginx/development/frontend-http.conf /etc/nginx/frontend-http.conf
 
 # Production build stage
 FROM nginx-common-build-stage as nginx-production-build-stage
@@ -48,4 +49,5 @@ FROM nginx-common-build-stage as nginx-production-build-stage
 #Copy frontend build files to the html app
 COPY --from=node-production-build-stage /app/build/ /usr/share/nginx/html
 
-COPY ./nginx/production/frontend.conf /etc/nginx/frontend.conf
+COPY ./nginx/production/frontend-server.conf /etc/nginx/frontend-server.conf
+COPY ./nginx/production/frontend-http.conf /etc/nginx/frontend-http.conf
