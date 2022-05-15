@@ -1,27 +1,28 @@
 # Common build stage
-FROM node:16-alpine3.12 as common-build-stage
 
+FROM python:3 as common-build-stage
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 WORKDIR /app
-
-COPY ./package.json .
-COPY ./package-lock.json .
-
-RUN npm install
-
-COPY . ./app
-
+COPY requirements.txt /app/
+RUN pip install -r requirements.txt
+COPY manage.py /app/
+COPY . /app/
 EXPOSE 8080
+
 
 # Development build stage
 FROM common-build-stage as development-build-stage
 
-ENV NODE_ENV development
+# ENV NODE_ENV development
+RUN pwd
+RUN ls -la /app
 
-CMD ["npm", "run", "dev"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8080"]
 
-# Production build stage
-FROM common-build-stage as production-build-stage
+# # Production build stage
+# FROM common-build-stage as production-build-stage
 
-ENV NODE_ENV production
+# ENV NODE_ENV production
 
-CMD ["npm", "run", "start"]
+# CMD ["npm", "run", "start"]
